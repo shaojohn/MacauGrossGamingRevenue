@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>每月毛收入折线图</title>
+    <title>每月毛收入折线圖</title>
     <style>
         body { font-family: sans-serif; text-align: center; }
         .chart-card { margin: 1em; width: 80vw; }
@@ -11,67 +11,56 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>每月毛收入折线图</h1>
+    <h1>每月毛收入折線圖</h1>
+    <div class="chart-card">
+        <canvas id="recentYears"></canvas>
+    </div>
     <div class="chart-card">
         <canvas id="allYears"></canvas>
+    </div>
+    <div class="chart-card">
+        <canvas id="pastAndFuture"></canvas>
     </div>
     <script>
 const months = [
     "1月", "2月", "3月", "4月", "5月", "6月",
     "7月", "8月", "9月", "10月", "11月", "12月"
 ];
-// 2025年1-6月資料已補充，其餘為 null
-const data2025 = [
-    18254, 19744, 19659, 18858, 21193, 21064,
-    22125, null, null, null, null, null
-];
-const data2024 = [
-    19337, 18486, 19503, 18545, 20188, 17694,
-    18595, 19754, 17253, 20787, 18438, 18202
-];
-const data2023 = [
-    11580, 10324, 12738, 14722, 15565, 15207,
-    16662, 17213, 14937, 19501, 16043, 18567
-];
-const data2019 = [
-    24942, 25370, 25840, 23588, 25952, 23812,
-    24453, 24262, 22079, 26443, 22877, 22838
+const yearData = [
+    { label: '2009 毛收入', data: [8575, 7912, 9531, 8340, 8799, 8269, 9570, 11268, 10943, 12600, 12215, 11347], borderColor: '#795548', backgroundColor: 'rgba(121,85,72,0.05)', borderWidth: 2, borderDash: [], pointRadius: 1 },
+    { label: '2010 毛收入', data: [13937, 13445, 13569, 14186, 17075, 13642, 16310, 15773, 15302, 18869, 17354, 18883], borderColor: '#607d8b', backgroundColor: 'rgba(96,125,139,0.05)', borderWidth: 2, borderDash: [], pointRadius: 1 },
+    { label: '2011 毛收入', data: [18571, 19863, 20087, 20507, 24306, 20792, 24212, 24769, 21244, 26851, 23058, 23608], borderColor: '#00bcd4', backgroundColor: 'rgba(0,188,212,0.05)', borderWidth: 2, borderDash: [], pointRadius: 1 },
+    { label: '2012 毛收入', data: [25040, 24286, 24989, 25003, 26078, 23334, 24579, 26136, 23866, 27700, 24882, 28245], borderColor: '#8bc34a', backgroundColor: 'rgba(139,195,74,0.05)', borderWidth: 2, borderDash: [], pointRadius: 1 },
+    { label: '2013 毛收入', data: [26864, 27084, 31336, 28305, 29589, 28269, 29485, 30737, 28963, 36477, 30179, 33460], borderColor: '#ff9800', backgroundColor: 'rgba(255,152,0,0.05)', borderWidth: 2, borderDash: [], pointRadius: 1 },
+    { label: '2014 毛收入', data: [28739, 38007, 35453, 31318, 32354, 27215, 28415, 28876, 25564, 28025, 24269, 23285], borderColor: '#e91e63', backgroundColor: 'rgba(233,30,99,0.05)', borderWidth: 2, borderDash: [], pointRadius: 1 },
+    { label: '2015 毛收入', data: [23748, 19542, 21487, 19167, 20346, 17355, 18615, 18623, 17133, 20059, 16425, 18340], borderColor: '#9c27b0', backgroundColor: 'rgba(156,39,176,0.05)', borderWidth: 2, borderDash: [], pointRadius: 1 },
+    { label: '2016 毛收入', data: [18674, 19521, 17981, 17341, 18389, 15881, 17774, 18836, 18396, 21815, 18788, 19815], borderColor: '#3f51b5', backgroundColor: 'rgba(63,81,181,0.05)', borderWidth: 2, borderDash: [], pointRadius: 1 },
+    { label: '2017 毛收入', data: [19255, 22991, 21232, 20162, 22742, 19994, 22964, 22676, 21362, 26633, 23033, 22699], borderColor: '#009688', backgroundColor: 'rgba(0,150,136,0.05)', borderWidth: 2, borderDash: [], pointRadius: 1 },
+    { label: '2018 毛收入', data: [26260, 24300, 25950, 25728, 25489, 22490, 25327, 26559, 21952, 27328, 24995, 26468], borderColor: '#ffc107', backgroundColor: 'rgba(255,193,7,0.05)', borderWidth: 2, borderDash: [], pointRadius: 1 },
+    { label: '2019 毛收入', data: [24942, 25370, 25840, 23588, 25952, 23812, 24453, 24262, 22079, 26443, 22877, 22838], borderColor: '#ff5722', backgroundColor: 'rgba(255,87,34,0.10)', borderWidth: 3, borderDash: [], pointRadius: 2 },
+    { label: '2020 毛收入', data: [22126, 3104, 5257, 754, 1764, 716, 1344, 1330, 2211, 7270, 6748, 7818], borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.10)', borderWidth: 3, borderDash: [], pointRadius: 2 },
+    { label: '2021 毛收入', data: [8024, 7312, 8306, 8401, 10445, 6535, 8444, 4442, 5879, 4365, 6749, 7962], borderColor: '#cddc39', backgroundColor: 'rgba(205,220,57,0.10)', borderWidth: 3, borderDash: [], pointRadius: 2 },
+    { label: '2022 毛收入', data: [6344, 7759, 3672, 2677, 3341, 2477, 398, 2189, 2962, 3899, 2999, 3482], borderColor: '#00bcd4', backgroundColor: 'rgba(0,188,212,0.10)', borderWidth: 3, borderDash: [], pointRadius: 2 },
+    { label: '2023 毛收入', data: [11580, 10324, 12738, 14722, 15565, 15207, 16662, 17213, 14937, 19501, 16043, 18567], borderColor: '#8bc34a', backgroundColor: 'rgba(139,195,74,0.10)', borderWidth: 3, borderDash: [], pointRadius: 2 },
+    { label: '2024 毛收入', data: [19337, 18486, 19503, 18545, 20188, 17694, 18595, 19754, 17253, 20787, 18438, 18202], borderColor: '#9c27b0', backgroundColor: 'rgba(156,39,176,0.10)', borderWidth: 3, borderDash: [], pointRadius: 2 },
+    { label: '2025 毛收入', data: [18254, 19744, 19659, 18858, 21193, 21064, 22125, null, null, null, null, null], borderColor: '#f44336', backgroundColor: 'rgba(244,67,54,0.10)', borderWidth: 4, borderDash: [], pointRadius: 3 }
 ];
 
+// 原本全年度圖表
 new Chart(document.getElementById('allYears').getContext('2d'), {
     type: 'line',
     data: {
         labels: months,
-        datasets: [
-            {
-                label: '2025 毛收入',
-                data: data2025,
-                borderColor: 'red',
-                backgroundColor: 'rgba(255,0,0,0.1)',
-                spanGaps: true
-            },
-            {
-                label: '2024 毛收入',
-                data: data2024,
-                borderColor: 'blue',
-                backgroundColor: 'rgba(0,0,255,0.1)',
-                spanGaps: true
-            },
-            {
-                label: '2023 毛收入',
-                data: data2023,
-                borderColor: 'green',
-                backgroundColor: 'rgba(0,255,0,0.1)',
-                spanGaps: true
-            },
-            {
-                label: '2019 毛收入',
-                data: data2019,
-                borderColor: 'orange',
-                backgroundColor: 'rgba(255,165,0,0.1)',
-                spanGaps: true
-            }
-        ]
+        datasets: yearData.map(y => ({
+            label: y.label,
+            data: y.data,
+            borderColor: y.borderColor,
+            backgroundColor: y.backgroundColor,
+            borderWidth: y.borderWidth,
+            borderDash: y.borderDash,
+            pointRadius: y.pointRadius,
+            spanGaps: true
+        }))
     },
     options: {
         responsive: true,
@@ -79,7 +68,19 @@ new Chart(document.getElementById('allYears').getContext('2d'), {
         plugins: {
             title: {
                 display: true,
-                text: '2019-2025 每月毛收入'
+                text: '2009-2025 每月毛收入'
+            },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function(context) {
+                        // 顯示: 年份: 數值(加千分位)
+                        let label = context.dataset.label || '';
+                        let value = context.parsed.y;
+                        if (value == null) return label + ': 無資料';
+                        return label + ': ' + value.toLocaleString();
+                    }
+                }
             }
         },
         scales: {
@@ -93,6 +94,132 @@ new Chart(document.getElementById('allYears').getContext('2d'), {
         }
     }
 });
+
+// 新增 2019-2025 年圖表
+const recentYearData = yearData.filter(y =>
+    y.label.startsWith('2019') ||
+    y.label.startsWith('2020') ||
+    y.label.startsWith('2021') ||
+    y.label.startsWith('2022') ||
+    y.label.startsWith('2023') ||
+    y.label.startsWith('2024') ||
+    y.label.startsWith('2025')
+);
+
+new Chart(document.getElementById('recentYears').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: months,
+        datasets: recentYearData.map(y => ({
+            label: y.label,
+            data: y.data,
+            borderColor: y.borderColor,
+            backgroundColor: y.backgroundColor,
+            borderWidth: y.borderWidth,
+            borderDash: y.borderDash,
+            pointRadius: y.pointRadius,
+            spanGaps: true
+        }))
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: '2019-2025 每月毛收入（近年）'
+            },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        let value = context.parsed.y;
+                        if (value == null) return label + ': 無資料';
+                        return label + ': ' + value.toLocaleString();
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                title: { display: true, text: '毛收入 (百萬/億元)' },
+                min: 0 
+            },
+            x: {
+                title: { display: true, text: '月份' }
+            }
+        }
+    }
+});
+
+// 新增 2010-2019 和 2025 年圖表
+const pastAndFutureData = yearData.filter(y =>
+    y.label.startsWith('2010') ||
+    y.label.startsWith('2011') ||
+    y.label.startsWith('2012') ||
+    y.label.startsWith('2013') ||
+    y.label.startsWith('2014') ||
+    y.label.startsWith('2015') ||
+    y.label.startsWith('2016') ||
+    y.label.startsWith('2017') ||
+    y.label.startsWith('2018') ||
+    y.label.startsWith('2019') ||
+    y.label.startsWith('2025')
+);
+
+new Chart(document.getElementById('pastAndFuture').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: months,
+        datasets: pastAndFutureData.map(y => ({
+            label: y.label,
+            data: y.data,
+            borderColor: y.borderColor,
+            backgroundColor: y.backgroundColor,
+            borderWidth: y.borderWidth,
+            borderDash: y.borderDash,
+            pointRadius: y.pointRadius,
+            spanGaps: true
+        }))
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: '2010-2019 與 2025 每月毛收入'
+            },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        let value = context.parsed.y;
+                        if (value == null) return label + ': 無資料';
+                        return label + ': ' + value.toLocaleString();
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                title: { display: true, text: '毛收入 (百萬/億元)' },
+                min: 0
+            },
+            x: {
+                title: { display: true, text: '月份' }
+            }
+        }
+    }
+});
+
+// 修正 Chart.js 8+ 預設 hover/mouse 位置偏移問題
+// 建議加上此 option 讓 tooltip 與點精確對齊
+Chart.defaults.interaction.mode = 'nearest';
+Chart.defaults.interaction.axis = 'x';
+Chart.defaults.interaction.intersect = false;
 </script>
 </body>
 </html>
