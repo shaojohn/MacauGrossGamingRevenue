@@ -96,7 +96,7 @@ new Chart(document.getElementById('allYears').getContext('2d'), {
     }
 });
 
-// 新增 2019-2025 年圖表
+// 新增 2019-2026 年圖表
 const recentYearData = yearData.filter(y =>
     y.label.startsWith('2019') ||
     y.label.startsWith('2020') ||
@@ -155,7 +155,7 @@ new Chart(document.getElementById('recentYears').getContext('2d'), {
     }
 });
 
-// 新增 2010-2019 和 2025 年圖表
+// 新增 2010-2019 和 2026 年圖表
 const pastAndFutureData = yearData.filter(y =>
     y.label.startsWith('2010') ||
     y.label.startsWith('2011') ||
@@ -167,7 +167,7 @@ const pastAndFutureData = yearData.filter(y =>
     y.label.startsWith('2017') ||
     y.label.startsWith('2018') ||
     y.label.startsWith('2019') ||
-    y.label.startsWith('2025')
+    y.label.startsWith('2026')
 );
 
 new Chart(document.getElementById('pastAndFuture').getContext('2d'), {
@@ -191,7 +191,7 @@ new Chart(document.getElementById('pastAndFuture').getContext('2d'), {
         plugins: {
             title: {
                 display: true,
-                text: '2010-2019 與 2025 每月毛收入'
+                text: '2010-2019 與 2026 每月毛收入'
             },
             tooltip: {
                 enabled: true,
